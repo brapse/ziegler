@@ -1,10 +1,9 @@
 var utils = require('util'),
     EventEmitter = require('events').EventEmitter;
 
-var Controller = function (speed, k_p, k_i, k_d) {
-    // speed = executions per second
+var Controller = this.Controller =function (speed, k_p, k_i, k_d) {
     EventEmitter.apply(this);
-    this.speed = speed;
+    this.speed = speed; // executions per second
 
     this.k_p = k_p || 1;
     this.k_i = k_i || 0;
@@ -31,15 +30,11 @@ Controller.prototype.update = function () {
     var delay = (this.k_p*error) + (this.k_i * this.sumError) + (this.k_d * dError);
 
     var that = this;
-    console.log('Error:', error);
-    console.log('dError', dError);
-    console.log('Delay:', delay);
-    console.log('Duration:', duration);
     setTimeout(function () {
         that.lastTime = new(Date)().getTime();
         that.emit('tick');
     }, delay);
-}
+};
 
 Controller.prototype.start = function () {
     this.lastTime = new(Date)().getTime();
@@ -48,7 +43,7 @@ Controller.prototype.start = function () {
 };
 
 
-var control = new(Controller)(20);
+var control = new(Controller)(10);
 var last = new(Date)().getTime();
 control.on('tick', function (rate) {
     var now = new(Date)().getTime();
