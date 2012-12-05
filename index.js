@@ -41,16 +41,3 @@ Controller.prototype.start = function () {
 
     this.emit('tick');
 };
-
-
-var control = new(Controller)(10);
-var last = new(Date)().getTime();
-control.on('tick', function (rate) {
-    var now = new(Date)().getTime();
-    console.log('tick', now - last);
-    last = now
-
-    control.update()
-});
-
-control.start()
