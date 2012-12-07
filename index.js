@@ -1,7 +1,7 @@
 var utils = require('util'),
     EventEmitter = require('events').EventEmitter;
 
-var Controller = this.Controller =function (speed, k_p, k_i, k_d) {
+var Controller = this.Controller = function (speed, k_p, k_i, k_d) {
     EventEmitter.apply(this);
     this.speed = speed; // executions per second
 
@@ -40,4 +40,24 @@ Controller.prototype.start = function () {
     this.lastTime = new(Date)().getTime();
 
     this.emit('tick');
+};
+
+Controller.prototype.ramp = function (from, to, over, steps) {
+    var step = 0;
+    var range = to - from;
+    this.speed = from;
+    var that = this;
+
+    var run = function () {
+        setTimeout(function () {
+            step = step + 1;
+            console.log('UPDATE: ', step, from + (range/steps * step));
+            that.speed = from +  (range/steps * step);
+            if (step != steps) {
+                run()
+            }
+        }, over/steps)
+    }
+
+    run();
 };
